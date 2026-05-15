@@ -1,0 +1,1553 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Find Your Rival — Encuentra rivales. Construye tu legado.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,400;0,700;0,800;0,900;1,700;1,800;1,900&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+/* ══════════════════════════════════════════
+   VARIABLES & RESET
+══════════════════════════════════════════ */
+:root{
+  --black:#050505;
+  --dark:#0d0d0d;
+  --card:#141414;
+  --card2:#1c1c1c;
+  --green:#76B900;
+  --green-dim:#4d7a00;
+  --green-glow:rgba(118,185,0,.15);
+  --white:#fff;
+  --gray:#666;
+  --gray-lt:#999;
+  --border:#1e1e1e;
+  --border-g:rgba(118,185,0,.28);
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:'Inter',sans-serif;
+  background:var(--black);
+  color:var(--white);
+  overflow-x:hidden;
+}
+/* grain overlay */
+body::after{
+  content:'';
+  position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='.035'/%3E%3C/svg%3E");
+  pointer-events:none;z-index:9999;opacity:.5;
+}
+
+/* ══ UTILS ══ */
+.green{color:var(--green);}
+.sec-tag{
+  display:inline-flex;align-items:center;gap:.5rem;
+  font-size:.68rem;font-weight:700;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--green);margin-bottom:1.1rem;
+}
+.sec-tag::before{content:'';width:20px;height:2px;background:var(--green);}
+
+/* ══ REVEAL ANIMATIONS ══ */
+.rv{opacity:0;transform:translateY(36px);transition:opacity .8s ease,transform .8s ease;}
+.rv.on{opacity:1;transform:translateY(0);}
+.rv.d1{transition-delay:.1s;}.rv.d2{transition-delay:.2s;}
+.rv.d3{transition-delay:.3s;}.rv.d4{transition-delay:.4s;}
+.rv.d5{transition-delay:.5s;}.rv.d6{transition-delay:.6s;}
+
+/* ══ KEYFRAMES ══ */
+@keyframes heroLine{
+  from{opacity:0;transform:translateY(60px) skewY(2deg);}
+  to  {opacity:1;transform:translateY(0)     skewY(0);}
+}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+@keyframes slideR{from{opacity:0;transform:translateX(50px);}to{opacity:1;transform:translateX(0);}}
+@keyframes glowPulse{
+  0%,100%{text-shadow:0 0 20px rgba(118,185,0,.5);}
+  50%{text-shadow:0 0 50px rgba(118,185,0,.9),0 0 100px rgba(118,185,0,.4);}
+}
+@keyframes floatY{
+  0%,100%{transform:translateY(0);}
+  50%{transform:translateY(-12px);}
+}
+@keyframes pgreen{
+  0%,100%{box-shadow:0 0 0 0 rgba(118,185,0,.45);}
+  50%{box-shadow:0 0 0 14px rgba(118,185,0,0);}
+}
+@keyframes blink{0%,80%,100%{opacity:.25;}40%{opacity:1;}}
+@keyframes scroll{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+@keyframes rankFlash{
+  0%{background:rgba(118,185,0,.18);}
+  100%{background:transparent;}
+}
+@keyframes shimmer{
+  0%{background-position:-200% 0;}
+  100%{background-position:200% 0;}
+}
+
+/* ══════════════════════════════════════════
+   LOGO COMPONENT
+══════════════════════════════════════════ */
+.logo{
+  font-family:'Barlow Condensed',sans-serif;
+  font-style:italic;font-weight:900;
+  line-height:.82;display:flex;flex-direction:column;
+}
+.logo .lw{color:#fff;}
+.logo .lg{color:var(--green);}
+.logo-inline{
+  font-family:'Barlow Condensed',sans-serif;
+  font-style:italic;font-weight:900;
+  font-size:1.45rem;line-height:1;
+  display:flex;align-items:baseline;gap:.15em;
+}
+.logo-inline .w{color:#fff;}
+.logo-inline .g{color:var(--green);}
+
+/* ══════════════════════════════════════════
+   BUTTONS
+══════════════════════════════════════════ */
+.btn{
+  display:inline-flex;align-items:center;gap:.5rem;
+  padding:.9rem 2rem;border-radius:3px;
+  font-weight:800;font-size:.88rem;
+  text-decoration:none;border:none;cursor:pointer;
+  letter-spacing:.02em;transition:all .25s;
+  position:relative;overflow:hidden;
+}
+.btn::before{
+  content:'';position:absolute;
+  top:0;left:-100%;width:100%;height:100%;
+  background:rgba(255,255,255,.12);
+  transform:skewX(-18deg);transition:left .4s;
+}
+.btn:hover::before{left:110%;}
+.btn-lime{background:var(--green);color:#000;}
+.btn-lime:hover{transform:translateY(-2px);box-shadow:0 12px 36px rgba(118,185,0,.38);}
+.btn-ghost{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.18);}
+.btn-ghost:hover{border-color:var(--green);color:var(--green);}
+.btn-wa{background:#25D366;color:#fff;}
+.btn-wa:hover{transform:translateY(-2px);box-shadow:0 12px 36px rgba(37,211,102,.35);}
+
+/* ══════════════════════════════════════════
+   NAV
+══════════════════════════════════════════ */
+#nav{
+  position:fixed;top:0;left:0;right:0;z-index:500;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:1.3rem 6%;
+  transition:all .4s;
+}
+#nav.scrolled{
+  background:rgba(5,5,5,.92);
+  backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+  border-bottom:1px solid var(--border);
+  padding:.95rem 6%;
+}
+.nav-links{display:flex;gap:2.4rem;list-style:none;}
+.nav-links a{
+  color:rgba(255,255,255,.45);text-decoration:none;
+  font-size:.8rem;font-weight:500;letter-spacing:.06em;text-transform:uppercase;
+  transition:color .2s;
+}
+.nav-links a:hover{color:#fff;}
+@media(max-width:760px){.nav-links{display:none;}}
+
+/* ══════════════════════════════════════════
+   HERO
+══════════════════════════════════════════ */
+#hero{
+  min-height:100vh;
+  display:flex;align-items:center;
+  padding:9rem 6% 5rem;
+  position:relative;overflow:hidden;
+}
+.hero-bg{position:absolute;inset:0;z-index:0;}
+.hero-gradient{
+  position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 75% 55% at 50% 108%, rgba(118,185,0,.2) 0%,transparent 58%),
+    radial-gradient(ellipse 100% 45% at 50% 100%, rgba(0,35,0,.7) 0%,transparent 50%),
+    radial-gradient(ellipse 60% 60% at 85% 25%, rgba(0,0,0,.8) 0%,transparent 60%),
+    linear-gradient(180deg,#050505 0%,#070f04 50%,#050505 100%);
+}
+.hero-grid{
+  position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(118,185,0,.045) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(118,185,0,.045) 1px,transparent 1px);
+  background-size:65px 65px;
+  mask-image:linear-gradient(180deg,transparent 0%,rgba(0,0,0,.7) 25%,rgba(0,0,0,.7) 75%,transparent 100%);
+}
+.hero-glow{
+  position:absolute;border-radius:50%;
+  filter:blur(80px);animation:floatY 7s ease-in-out infinite;
+}
+.hg1{width:500px;height:350px;background:rgba(118,185,0,.07);top:15%;left:5%;animation-delay:0s;}
+.hg2{width:350px;height:280px;background:rgba(118,185,0,.05);top:35%;right:3%;animation-delay:2.5s;}
+.hg3{width:600px;height:180px;background:rgba(118,185,0,.06);bottom:-5%;left:25%;animation-delay:5s;}
+
+.hero-content{position:relative;z-index:2;max-width:860px;}
+
+.hero-eyebrow{
+  display:inline-flex;align-items:center;gap:.55rem;
+  background:rgba(118,185,0,.09);border:1px solid rgba(118,185,0,.22);
+  padding:.4rem 1.1rem;border-radius:2px;
+  font-size:.7rem;font-weight:700;color:var(--green);
+  letter-spacing:.17em;text-transform:uppercase;
+  margin-bottom:2rem;
+  animation:fadeIn 1s ease .3s both;
+}
+.hero-eyebrow .dot{
+  width:6px;height:6px;border-radius:50%;
+  background:var(--green);flex-shrink:0;
+  animation:pgreen 2s infinite;
+}
+
+.hero-h1{
+  font-family:'Barlow Condensed',sans-serif;
+  font-style:italic;font-weight:900;
+  font-size:clamp(3.5rem,10.5vw,10rem);
+  line-height:.86;margin-bottom:2rem;
+  overflow:hidden;
+}
+.hero-h1 .hl{
+  display:block;
+  animation:heroLine .95s cubic-bezier(.16,1,.3,1) both;
+}
+.hero-h1 .hl:nth-child(1){animation-delay:.45s;}
+.hero-h1 .hl:nth-child(2){animation-delay:.6s;}
+.hero-h1 .hl:nth-child(3){animation-delay:.75s;color:var(--green);
+  animation:heroLine .95s cubic-bezier(.16,1,.3,1) .75s both,glowPulse 3.5s ease-in-out 2s infinite;
+}
+.hero-h1 .hl:nth-child(4){animation-delay:.9s;color:var(--green);
+  animation:heroLine .95s cubic-bezier(.16,1,.3,1) .9s both,glowPulse 3.5s ease-in-out 2.2s infinite;
+}
+
+.hero-sub{
+  font-size:clamp(.95rem,2vw,1.2rem);
+  color:rgba(255,255,255,.5);line-height:1.75;
+  max-width:520px;margin-bottom:2.8rem;
+  animation:fadeIn .9s ease 1.2s both;
+}
+.hero-btns{
+  display:flex;gap:.9rem;flex-wrap:wrap;
+  margin-bottom:4rem;
+  animation:fadeIn .9s ease 1.4s both;
+}
+.hero-stats{
+  display:flex;gap:3.5rem;flex-wrap:wrap;
+  animation:fadeIn .9s ease 1.6s both;
+}
+.hs-item{border-left:2px solid var(--green);padding-left:1rem;}
+.hs-n{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:2.6rem;font-weight:900;line-height:1;
+}
+.hs-n span{color:var(--green);}
+.hs-l{font-size:.68rem;color:#555;text-transform:uppercase;letter-spacing:.1em;margin-top:.2rem;}
+
+/* hero phone mockup */
+.hero-phone{
+  position:absolute;right:5%;top:50%;
+  transform:translateY(-50%);
+  width:min(40%,400px);
+  animation:slideR 1.2s cubic-bezier(.16,1,.3,1) .9s both;
+  z-index:3;
+}
+@media(max-width:900px){.hero-phone{display:none;}}
+.phone-wrap{
+  background:var(--card);
+  border:1px solid rgba(255,255,255,.07);
+  border-radius:36px;padding:.7rem;
+  box-shadow:
+    0 0 0 1px rgba(118,185,0,.1),
+    0 50px 120px rgba(0,0,0,.85),
+    inset 0 1px 0 rgba(255,255,255,.04);
+}
+.phone-screen{
+  background:#0e0e0e;border-radius:30px;
+  overflow:hidden;position:relative;
+}
+.phone-notch{
+  width:90px;height:26px;
+  background:var(--card);
+  border-radius:0 0 14px 14px;
+  margin:0 auto;
+}
+.p-app{padding:.9rem .9rem 1.2rem;}
+.p-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:.4rem .2rem .9rem;
+}
+.p-title{font-size:.65rem;font-weight:800;letter-spacing:.05em;}
+.p-badge{
+  background:var(--green);color:#000;
+  padding:.2rem .55rem;border-radius:2px;
+  font-size:.58rem;font-weight:900;letter-spacing:.1em;
+}
+.p-board{display:flex;flex-direction:column;gap:.4rem;}
+.p-row{
+  display:flex;align-items:center;gap:.5rem;
+  padding:.55rem .65rem;border-radius:8px;
+  background:rgba(255,255,255,.04);font-size:.65rem;
+}
+.p-row.p1{
+  background:rgba(118,185,0,.1);
+  border:1px solid rgba(118,185,0,.2);
+}
+.p-pos{width:14px;font-weight:900;font-size:.62rem;color:var(--gray-lt);}
+.p-pos.g{color:var(--green);}
+.p-team{flex:1;font-weight:600;}
+.p-pts{color:var(--green);font-weight:800;}
+.p-mv{font-size:.55rem;}
+.p-mv.up{color:#4ade80;}.p-mv.dn{color:#f87171;}.p-mv.eq{color:#555;}
+
+/* ══════════════════════════════════════════
+   MARQUEE
+══════════════════════════════════════════ */
+.marquee-wrap{
+  overflow:hidden;
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+  background:var(--dark);padding:.85rem 0;
+}
+.marquee-track{
+  display:flex;gap:3rem;
+  animation:scroll 24s linear infinite;
+  white-space:nowrap;
+}
+.marquee-item{
+  display:flex;align-items:center;gap:.9rem;
+  font-size:.73rem;font-weight:600;
+  letter-spacing:.1em;text-transform:uppercase;
+  color:rgba(255,255,255,.28);flex-shrink:0;
+}
+.marquee-item .gem{color:var(--green);font-size:.8rem;}
+.marquee-item b{color:rgba(255,255,255,.7);}
+
+/* ══════════════════════════════════════════
+   SECTION BASE
+══════════════════════════════════════════ */
+.sec{padding:9rem 6%;max-width:1200px;margin:0 auto;}
+.sec-full{padding:9rem 6%;}
+.sec-dark{background:var(--dark);}
+.sh{margin-bottom:4.5rem;}
+.sh h2{
+  font-family:'Barlow Condensed',sans-serif;
+  font-style:italic;font-weight:900;
+  font-size:clamp(2.5rem,6vw,5rem);
+  line-height:.93;
+}
+.sh p{
+  font-size:1rem;color:rgba(255,255,255,.45);
+  line-height:1.8;margin-top:1.3rem;max-width:560px;
+}
+
+/* ══════════════════════════════════════════
+   MISSION
+══════════════════════════════════════════ */
+#mission{padding:9rem 6%;}
+.mission-grid{
+  max-width:1200px;margin:0 auto;
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:6rem;align-items:center;
+}
+@media(max-width:760px){.mission-grid{grid-template-columns:1fr;gap:3rem;}}
+.mission-quote{
+  font-family:'Barlow Condensed',sans-serif;
+  font-style:italic;font-size:clamp(1.9rem,4vw,3rem);
+  font-weight:800;line-height:1.15;
+  border-left:3px solid var(--green);padding-left:2rem;
+}
+.mission-quote em{color:var(--green);font-style:normal;}
+.mission-right p{
+  font-size:.98rem;color:rgba(255,255,255,.5);
+  line-height:1.85;margin-bottom:1.5rem;
+}
+.mission-manifesto{
+  font-family:'Barlow Condensed',sans-serif;
+  font-style:italic;font-size:1.5rem;font-weight:800;
+  border-top:1px solid var(--border);padding-top:1.6rem;
+  margin-top:1.6rem;
+}
+
+/* ══════════════════════════════════════════
+   PROBLEM
+══════════════════════════════════════════ */
+#problem{padding:9rem 6%;background:var(--dark);}
+.prob-grid{
+  max-width:1200px;margin:0 auto;
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:1px;background:var(--border);
+  border:1px solid var(--border);border-radius:18px;overflow:hidden;
+}
+@media(max-width:760px){.prob-grid{grid-template-columns:1fr;}}
+.prob-card{
+  background:var(--dark);padding:2.5rem 2rem;
+  position:relative;transition:background .3s;cursor:default;
+}
+.prob-card:hover{background:#111;}
+.prob-card::after{
+  content:'';position:absolute;
+  bottom:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--green),transparent);
+  opacity:0;transition:opacity .3s;
+}
+.prob-card:hover::after{opacity:1;}
+.prob-num{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:4.5rem;font-weight:900;
+  color:rgba(255,255,255,.04);line-height:1;margin-bottom:.8rem;
+}
+.prob-icon{font-size:1.5rem;margin-bottom:.9rem;display:block;}
+.prob-card h3{font-size:1rem;font-weight:700;margin-bottom:.55rem;}
+.prob-card p{font-size:.83rem;color:rgba(255,255,255,.4);line-height:1.7;}
+
+/* ══════════════════════════════════════════
+   SOLUTION
+══════════════════════════════════════════ */
+#solution{padding:9rem 6%;}
+.feat-grid{
+  max-width:1200px;margin:0 auto;
+  display:grid;grid-template-columns:repeat(4,1fr);gap:1.4rem;
+  margin-top:4rem;
+}
+@media(max-width:900px){.feat-grid{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:500px){.feat-grid{grid-template-columns:1fr;}}
+.feat-card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:18px;padding:2rem 1.8rem;
+  position:relative;overflow:hidden;
+  transition:all .35s;cursor:default;
+}
+.feat-card::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 70% 60% at 50% -10%,rgba(118,185,0,.11),transparent 55%);
+  opacity:0;transition:opacity .35s;
+}
+.feat-card:hover::before{opacity:1;}
+.feat-card:hover{
+  transform:translateY(-8px);
+  border-color:rgba(118,185,0,.32);
+  box-shadow:0 24px 60px rgba(0,0,0,.5),0 0 0 1px rgba(118,185,0,.1);
+}
+.feat-card::after{
+  content:'';position:absolute;
+  top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--green-dim),var(--green));
+  opacity:0;transition:opacity .35s;
+}
+.feat-card:hover::after{opacity:1;}
+.fi{
+  width:50px;height:50px;border-radius:12px;
+  background:rgba(118,185,0,.1);border:1px solid rgba(118,185,0,.2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.4rem;margin-bottom:1.2rem;
+}
+.feat-card h3{font-size:1.05rem;font-weight:700;margin-bottom:.55rem;}
+.feat-card p{font-size:.82rem;color:rgba(255,255,255,.42);line-height:1.65;}
+.feat-more{
+  margin-top:1.4rem;font-size:.72rem;font-weight:700;
+  color:var(--green);letter-spacing:.05em;
+  transition:letter-spacing .2s;
+}
+.feat-card:hover .feat-more{letter-spacing:.1em;}
+
+/* ══════════════════════════════════════════
+   LEAGUE — THE CROWN JEWEL
+══════════════════════════════════════════ */
+#league{
+  padding:9rem 6%;background:var(--dark);
+  position:relative;overflow:hidden;
+}
+.league-glow{
+  position:absolute;inset:0;
+  background:radial-gradient(ellipse 90% 55% at 50% 0%,rgba(118,185,0,.07) 0%,transparent 55%);
+  pointer-events:none;
+}
+.league-inner{max-width:1200px;margin:0 auto;position:relative;z-index:2;}
+
+.league-header{text-align:center;margin-bottom:5rem;}
+.league-coming{
+  display:inline-flex;align-items:center;gap:.6rem;
+  background:rgba(118,185,0,.07);border:1px solid rgba(118,185,0,.28);
+  padding:.48rem 1.2rem;border-radius:2px;
+  font-size:.68rem;font-weight:700;color:var(--green);
+  letter-spacing:.2em;text-transform:uppercase;margin-bottom:1.6rem;
+}
+.league-coming .live{
+  width:7px;height:7px;border-radius:50%;
+  background:var(--green);animation:pgreen 1.8s infinite;
+}
+.league-header h2{
+  font-family:'Barlow Condensed',sans-serif;
+  font-style:italic;font-weight:900;
+  font-size:clamp(3rem,8vw,7rem);line-height:.88;
+  margin-bottom:1.5rem;
+}
+.league-header p{
+  font-size:1.05rem;color:rgba(255,255,255,.45);
+  max-width:540px;margin:0 auto;line-height:1.75;
+}
+.league-content{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:3.5rem;align-items:start;
+}
+@media(max-width:900px){.league-content{grid-template-columns:1fr;}}
+
+/* Leaderboard */
+.lb{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:18px;overflow:hidden;
+}
+.lb-top{
+  padding:1.15rem 1.5rem;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.lb-title{
+  display:flex;align-items:center;gap:.55rem;
+  font-size:.78rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;
+}
+.lb-title-icon{color:var(--green);font-size:.95rem;}
+.lb-season{
+  font-size:.65rem;color:var(--gray);background:var(--dark);
+  padding:.28rem .75rem;border-radius:3px;
+}
+.lb-cols{
+  display:grid;grid-template-columns:36px 1fr 36px 36px 36px 48px;
+  padding:.65rem 1.5rem;
+  font-size:.6rem;font-weight:700;text-transform:uppercase;
+  letter-spacing:.1em;color:var(--gray);
+  border-bottom:1px solid var(--border);
+}
+.lb-cols span{text-align:center;}
+.lb-cols span:nth-child(2){text-align:left;}
+.lb-row{
+  display:grid;grid-template-columns:36px 1fr 36px 36px 36px 48px;
+  padding:.8rem 1.5rem;align-items:center;font-size:.78rem;
+  border-bottom:1px solid rgba(255,255,255,.03);
+  transition:background .25s;
+}
+.lb-row:last-child{border-bottom:none;}
+.lb-row:hover{background:rgba(255,255,255,.03);}
+.lb-row.r1{background:rgba(118,185,0,.08);border-bottom:1px solid rgba(118,185,0,.1);}
+.lb-pos{font-weight:900;font-size:.82rem;text-align:center;}
+.lb-pos.p1{color:var(--green);}
+.lb-pos.p2{color:#bbb;}
+.lb-pos.p3{color:#c87533;}
+.lb-team{display:flex;align-items:center;gap:.6rem;}
+.lb-av{
+  width:26px;height:26px;border-radius:6px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:.58rem;font-weight:900;flex-shrink:0;
+}
+.a1{background:linear-gradient(135deg,#1a5c1a,#76B900);color:#000;}
+.a2{background:linear-gradient(135deg,#1a1a6e,#4444ff);}
+.a3{background:linear-gradient(135deg,#6e1a1a,#ff5555);}
+.a4{background:linear-gradient(135deg,#5a1a6e,#aa44ff);}
+.a5{background:linear-gradient(135deg,#1a4a6e,#2288ff);}
+.a6{background:linear-gradient(135deg,#6e5a1a,#ffaa00);}
+.lb-name{font-weight:600;font-size:.8rem;}
+.lb-n{text-align:center;color:var(--gray-lt);}
+.lb-pts{text-align:center;font-weight:800;}
+.lb-pts.top{color:var(--green);}
+.flash{animation:rankFlash .7s ease;}
+
+/* challenge cards */
+.league-right{display:flex;flex-direction:column;gap:1.4rem;}
+.ch-card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:16px;padding:1.4rem;
+  transition:all .3s;
+}
+.ch-card:hover{border-color:var(--border-g);transform:translateX(5px);}
+.ch-head{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-bottom:1.1rem;
+}
+.ch-badge{
+  font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;
+  padding:.26rem .7rem;border-radius:2px;
+}
+.ch-reto{background:rgba(118,185,0,.1);color:var(--green);border:1px solid rgba(118,185,0,.2);}
+.ch-played{background:rgba(120,120,120,.15);color:#777;}
+.ch-pend{background:rgba(255,165,0,.1);color:#ffa500;border:1px solid rgba(255,165,0,.2);}
+.ch-time{font-size:.68rem;color:var(--gray);}
+.ch-teams{
+  display:flex;align-items:center;gap:.9rem;margin-bottom:.9rem;
+}
+.ch-team{
+  display:flex;align-items:center;gap:.5rem;
+  flex:1;font-size:.82rem;font-weight:700;
+}
+.ch-team.r{justify-content:flex-end;flex-direction:row-reverse;}
+.ch-vs{
+  font-family:'Barlow Condensed',sans-serif;
+  font-style:italic;font-size:1.1rem;font-weight:900;
+  color:var(--gray);white-space:nowrap;
+}
+.ch-meta{
+  font-size:.7rem;color:var(--gray);
+  display:flex;gap:1.1rem;flex-wrap:wrap;
+}
+.lg-features{
+  display:grid;grid-template-columns:1fr 1fr;gap:.9rem;
+}
+.lgf{
+  display:flex;align-items:flex-start;gap:.8rem;
+  padding:.95rem;background:var(--dark);
+  border-radius:10px;border:1px solid var(--border);
+}
+.lgf-icon{color:var(--green);font-size:1rem;flex-shrink:0;margin-top:.1rem;}
+.lgf h4{font-size:.8rem;font-weight:700;margin-bottom:.22rem;}
+.lgf p{font-size:.73rem;color:rgba(255,255,255,.38);line-height:1.5;}
+
+/* ══════════════════════════════════════════
+   WHATSAPP AI
+══════════════════════════════════════════ */
+#wa-ai{padding:9rem 6%;}
+.wa-grid{
+  max-width:1200px;margin:0 auto;
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:6rem;align-items:center;
+}
+@media(max-width:900px){.wa-grid{grid-template-columns:1fr;gap:3rem;}}
+.wa-copy h2{
+  font-family:'Barlow Condensed',sans-serif;
+  font-style:italic;font-weight:900;
+  font-size:clamp(2.5rem,5.5vw,4.2rem);
+  line-height:.93;margin-bottom:1.5rem;
+}
+.wa-copy p{
+  font-size:.95rem;color:rgba(255,255,255,.45);
+  line-height:1.85;margin-bottom:2rem;
+}
+.wa-steps{display:flex;flex-direction:column;gap:.95rem;}
+.wa-step{display:flex;align-items:flex-start;gap:.95rem;}
+.wa-step-n{
+  width:28px;height:28px;border-radius:6px;flex-shrink:0;
+  background:rgba(118,185,0,.1);border:1px solid rgba(118,185,0,.25);
+  display:flex;align-items:center;justify-content:center;
+  font-size:.68rem;font-weight:900;color:var(--green);
+}
+.wa-step h4{font-size:.84rem;font-weight:700;margin-bottom:.2rem;}
+.wa-step p{font-size:.78rem;color:rgba(255,255,255,.38);line-height:1.55;}
+
+/* chat mock */
+.chat-mock{
+  background:#161616;border:1px solid #242424;border-radius:24px;
+  overflow:hidden;
+  box-shadow:0 40px 100px rgba(0,0,0,.65),0 0 0 1px rgba(118,185,0,.07);
+}
+.chat-bar{
+  background:#0f0f0f;padding:.95rem 1.2rem;
+  display:flex;align-items:center;gap:.75rem;
+  border-bottom:1px solid #1e1e1e;
+}
+.chat-av{
+  width:38px;height:38px;border-radius:50%;flex-shrink:0;
+  background:linear-gradient(135deg,#1a6b38,#76B900);
+  display:flex;align-items:center;justify-content:center;
+  font-weight:900;font-size:.68rem;color:#000;
+}
+.chat-nm{font-size:.86rem;font-weight:700;}
+.chat-st{font-size:.66rem;color:#25D366;}
+.chat-body{
+  padding:1.2rem;background:#0d1a10;
+  display:flex;flex-direction:column;gap:.65rem;
+  min-height:250px;
+}
+.bbl{
+  padding:.65rem .95rem;border-radius:12px;
+  font-size:.8rem;max-width:88%;line-height:1.5;
+}
+.bbl-out{
+  background:#1f5c1a;align-self:flex-end;
+  border-bottom-right-radius:3px;
+}
+.bbl-in{
+  background:#1e1e1e;color:#ccc;align-self:flex-start;
+  border-bottom-left-radius:3px;
+}
+.bbl-meta{font-size:.57rem;color:rgba(255,255,255,.28);margin-top:.12rem;}
+.bbl-meta.r{text-align:right;}
+.typing{
+  display:flex;gap:4px;align-items:center;
+  padding:.65rem .95rem;background:#1e1e1e;border-radius:12px;
+  border-bottom-left-radius:3px;width:fit-content;align-self:flex-start;
+}
+.typing span{
+  width:6px;height:6px;border-radius:50%;
+  background:#555;animation:blink 1.3s infinite;
+}
+.typing span:nth-child(2){animation-delay:.2s;}
+.typing span:nth-child(3){animation-delay:.4s;}
+
+/* ══════════════════════════════════════════
+   SPORTS
+══════════════════════════════════════════ */
+#sports{padding:9rem 6%;background:var(--dark);}
+.sports-grid{
+  max-width:1200px;margin:0 auto;
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:1.5rem;margin-top:4rem;
+}
+@media(max-width:600px){.sports-grid{grid-template-columns:1fr;}}
+.sport-card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:22px;padding:2.8rem 2.5rem;
+  position:relative;overflow:hidden;
+  transition:all .35s;
+}
+.sport-card::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 70% 65% at 50% -15%,rgba(118,185,0,.11),transparent 55%);
+  opacity:0;transition:opacity .35s;
+}
+.sport-card:hover::before{opacity:1;}
+.sport-card:hover{
+  border-color:rgba(118,185,0,.3);
+  transform:translateY(-7px);
+  box-shadow:0 28px 65px rgba(0,0,0,.5);
+}
+.sport-em{font-size:3.2rem;margin-bottom:1.2rem;display:block;}
+.sport-label{
+  font-size:.65rem;font-weight:700;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--green);margin-bottom:.5rem;
+}
+.sport-card h3{font-size:2rem;font-weight:800;margin-bottom:.9rem;}
+.sport-card p{font-size:.87rem;color:rgba(255,255,255,.42);line-height:1.7;}
+.sport-pill{
+  display:inline-block;margin-top:1.3rem;
+  background:rgba(118,185,0,.09);border:1px solid rgba(118,185,0,.22);
+  padding:.28rem .85rem;border-radius:2px;
+  font-size:.66rem;font-weight:700;color:var(--green);
+  text-transform:uppercase;letter-spacing:.1em;
+}
+.sports-coming{
+  max-width:1200px;margin:2rem auto 0;
+  display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;
+}
+.sc-lbl{font-size:.74rem;color:var(--gray);text-transform:uppercase;letter-spacing:.1em;}
+.sc-pills{display:flex;gap:.8rem;flex-wrap:wrap;}
+.sc-pill{
+  display:flex;align-items:center;gap:.4rem;
+  font-size:.8rem;color:rgba(255,255,255,.32);
+  background:var(--card);border:1px solid var(--border);
+  padding:.38rem .9rem;border-radius:20px;
+}
+
+/* ══════════════════════════════════════════
+   REWARDS
+══════════════════════════════════════════ */
+#rewards{padding:9rem 6%;}
+.rew-grid{
+  max-width:1200px;margin:0 auto;
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:1.4rem;margin-top:4rem;
+}
+@media(max-width:900px){.rew-grid{grid-template-columns:1fr;}}
+.rew-card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:20px;padding:2.5rem 2rem;
+  position:relative;overflow:hidden;
+  transition:all .35s;
+}
+.rew-card:hover{
+  transform:translateY(-6px);
+  border-color:rgba(118,185,0,.28);
+  box-shadow:0 22px 60px rgba(0,0,0,.45);
+}
+.rew-card.wide{grid-column:span 2;}
+@media(max-width:900px){.rew-card.wide{grid-column:span 1;}}
+.rew-glow{
+  position:absolute;top:-30%;right:-15%;
+  width:220px;height:220px;border-radius:50%;
+  background:radial-gradient(circle,rgba(118,185,0,.07) 0%,transparent 70%);
+}
+.rew-em{font-size:2.4rem;margin-bottom:1rem;display:block;}
+.rew-card h3{font-size:1.15rem;font-weight:800;margin-bottom:.65rem;}
+.rew-card p{font-size:.86rem;color:rgba(255,255,255,.42);line-height:1.7;}
+
+/* ══════════════════════════════════════════
+   ROADMAP
+══════════════════════════════════════════ */
+#roadmap{padding:9rem 6%;background:var(--dark);}
+.rm-inner{max-width:780px;margin:0 auto;}
+.rm-track{position:relative;margin-top:4rem;padding-left:2rem;}
+.rm-track::before{
+  content:'';position:absolute;
+  left:0;top:18px;bottom:18px;width:2px;
+  background:linear-gradient(180deg,var(--green) 0%,rgba(118,185,0,.08) 100%);
+}
+.rm-item{
+  position:relative;padding-left:2.5rem;padding-bottom:3.2rem;
+}
+.rm-item:last-child{padding-bottom:0;}
+.rm-dot{
+  position:absolute;left:-2.55rem;top:5px;
+  width:14px;height:14px;border-radius:50%;
+  border:2px solid rgba(118,185,0,.4);background:var(--dark);
+}
+.rm-dot.active{
+  background:var(--green);
+  border-color:var(--green);
+  box-shadow:0 0 14px rgba(118,185,0,.55);
+}
+.rm-phase{
+  font-size:.66rem;font-weight:700;text-transform:uppercase;
+  letter-spacing:.16em;color:var(--green);margin-bottom:.55rem;
+}
+.rm-item h3{font-size:1.2rem;font-weight:800;margin-bottom:.7rem;}
+.rm-tags{display:flex;flex-wrap:wrap;gap:.5rem;}
+.rm-tag{
+  background:var(--card);border:1px solid var(--border);
+  padding:.3rem .8rem;border-radius:3px;
+  font-size:.76rem;color:rgba(255,255,255,.45);
+}
+
+/* ══════════════════════════════════════════
+   FINAL CTA
+══════════════════════════════════════════ */
+#cta{
+  padding:11rem 6%;text-align:center;
+  position:relative;overflow:hidden;
+}
+.cta-glow{
+  position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 95% 65% at 50% 0%,rgba(118,185,0,.13) 0%,transparent 58%);
+}
+.cta-grid{
+  position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(118,185,0,.04) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(118,185,0,.04) 1px,transparent 1px);
+  background-size:65px 65px;
+  mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,rgba(0,0,0,1) 0%,transparent 70%);
+}
+.cta-inner{position:relative;z-index:2;}
+#cta h2{
+  font-family:'Barlow Condensed',sans-serif;
+  font-style:italic;font-weight:900;
+  font-size:clamp(4rem,10vw,9rem);
+  line-height:.88;margin-bottom:1.5rem;
+}
+#cta .sub{
+  font-size:1.1rem;color:rgba(255,255,255,.42);
+  max-width:480px;margin:0 auto 3.2rem;line-height:1.75;
+}
+.wl-wrap{max-width:460px;margin:0 auto 2.5rem;}
+.wl-form{display:flex;gap:.5rem;}
+.wl-form input{
+  flex:1;background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.11);
+  border-radius:3px;padding:.88rem 1.3rem;color:#fff;
+  font-size:.88rem;outline:none;transition:border-color .2s;
+}
+.wl-form input:focus{border-color:var(--green);}
+.wl-form input::placeholder{color:rgba(255,255,255,.2);}
+.wl-note{font-size:.7rem;color:rgba(255,255,255,.18);margin-top:.6rem;text-align:center;}
+.cta-btns{display:flex;gap:.9rem;justify-content:center;flex-wrap:wrap;}
+
+/* ══════════════════════════════════════════
+   FOOTER
+══════════════════════════════════════════ */
+footer{
+  background:var(--dark);border-top:1px solid var(--border);
+  padding:4rem 6%;
+}
+.footer-top{
+  display:flex;justify-content:space-between;align-items:flex-start;
+  flex-wrap:wrap;gap:3rem;margin-bottom:3.5rem;
+}
+.footer-brand .logo{font-size:2rem;margin-bottom:1.1rem;}
+.footer-manifesto{
+  font-size:.82rem;color:rgba(255,255,255,.28);
+  line-height:1.75;font-style:italic;max-width:240px;
+}
+.footer-col h4{
+  font-size:.68rem;font-weight:700;text-transform:uppercase;
+  letter-spacing:.14em;color:var(--gray);margin-bottom:1.1rem;
+}
+.footer-col ul{list-style:none;}
+.footer-col li{margin-bottom:.6rem;}
+.footer-col a{
+  color:rgba(255,255,255,.32);text-decoration:none;
+  font-size:.83rem;transition:color .2s;
+}
+.footer-col a:hover{color:#fff;}
+.footer-email{
+  display:flex;align-items:center;gap:.5rem;
+  color:var(--green);text-decoration:none;
+  font-size:.85rem;transition:opacity .2s;
+}
+.footer-email:hover{opacity:.7;}
+.socials{display:flex;gap:.65rem;margin-top:1.1rem;}
+.social{
+  width:34px;height:34px;border-radius:7px;
+  border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  color:rgba(255,255,255,.35);text-decoration:none;font-size:.88rem;
+  transition:all .2s;
+}
+.social:hover{border-color:var(--green);color:var(--green);}
+.footer-bottom{
+  padding-top:2.5rem;border-top:1px solid var(--border);
+  display:flex;justify-content:space-between;align-items:center;
+  flex-wrap:wrap;gap:1rem;
+}
+.footer-bottom p{font-size:.76rem;color:rgba(255,255,255,.18);}
+
+/* ══════════════════════════════════════════
+   WA FAB
+══════════════════════════════════════════ */
+.wa-fab{
+  position:fixed;bottom:2rem;right:2rem;z-index:800;
+  width:58px;height:58px;border-radius:50%;
+  background:#25D366;color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.6rem;text-decoration:none;
+  box-shadow:0 8px 28px rgba(37,211,102,.42);
+  transition:transform .25s,box-shadow .25s;
+  animation:pgreen 3s infinite;
+}
+.wa-fab:hover{transform:scale(1.1);box-shadow:0 12px 40px rgba(37,211,102,.55);}
+
+/* ══ responsive ══ */
+@media(max-width:760px){
+  .prob-grid{grid-template-columns:1fr!important;}
+  .feat-grid{grid-template-columns:1fr 1fr!important;}
+  .league-content{grid-template-columns:1fr!important;}
+  .rew-grid{grid-template-columns:1fr!important;}
+  .rew-card.wide{grid-column:span 1!important;}
+  .mission-grid{grid-template-columns:1fr!important;}
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════ NAV ══════════ -->
+<nav id="nav">
+  <div class="logo-inline">
+    <span class="w">FIND&nbsp;YOUR&nbsp;</span><span class="g">RIVAL.</span>
+  </div>
+  <ul class="nav-links">
+    <li><a href="#solution">Solución</a></li>
+    <li><a href="#league">La Liga</a></li>
+    <li><a href="#wa-ai">Agente IA</a></li>
+    <li><a href="#roadmap">Roadmap</a></li>
+  </ul>
+  <a href="#cta" class="btn btn-lime" style="font-size:.8rem;padding:.62rem 1.4rem;">Unirme →</a>
+</nav>
+
+<!-- ══════════ HERO ══════════ -->
+<section id="hero">
+  <div class="hero-bg">
+    <div class="hero-gradient"></div>
+    <div class="hero-grid"></div>
+    <div class="hero-glow hg1"></div>
+    <div class="hero-glow hg2"></div>
+    <div class="hero-glow hg3"></div>
+  </div>
+
+  <div class="hero-content">
+    <div class="hero-eyebrow">
+      <span class="dot"></span>
+      Lanzando en Pereira, Colombia &nbsp;·&nbsp; 2026
+    </div>
+    <h1 class="hero-h1">
+      <span class="hl">ENCUENTRA</span>
+      <span class="hl">RIVALES.</span>
+      <span class="hl">CONSTRUYE</span>
+      <span class="hl">TU LEGADO.</span>
+    </h1>
+    <p class="hero-sub">
+      La plataforma que conecta deportistas amateur para competir sin fricción en Pereira.
+      Reserva canchas, encuentra rivales, compite en la liga. Todo desde WhatsApp.
+    </p>
+    <div class="hero-btns">
+      <a href="#cta" class="btn btn-lime">⚽ Unirme a la liga</a>
+      <a href="https://wa.me/573000000000" class="btn btn-wa" target="_blank">💬 Hablar por WhatsApp</a>
+    </div>
+    <div class="hero-stats">
+      <div class="hs-item"><div class="hs-n">150<span>K+</span></div><div class="hs-l">Deportistas en Pereira</div></div>
+      <div class="hs-item"><div class="hs-n">0</div><div class="hs-l">Apps que descargar</div></div>
+      <div class="hs-item"><div class="hs-n">5</div><div class="hs-l">Pasos para jugar</div></div>
+    </div>
+  </div>
+
+  <!-- Phone mockup -->
+  <div class="hero-phone">
+    <div class="phone-wrap">
+      <div class="phone-screen">
+        <div class="phone-notch"></div>
+        <div class="p-app">
+          <div class="p-header">
+            <span class="p-title">🏆 LIGA FYR PEREIRA</span>
+            <span class="p-badge">EN VIVO</span>
+          </div>
+          <div class="p-board" id="pboard">
+            <div class="p-row p1">
+              <div class="p-pos g">1</div>
+              <div class="p-team">Los Cóndores FC</div>
+              <div class="p-pts">38</div>
+              <div class="p-mv up">▲2</div>
+            </div>
+            <div class="p-row">
+              <div class="p-pos">2</div>
+              <div class="p-team">Guerreros RC</div>
+              <div class="p-pts">35</div>
+              <div class="p-mv up">▲1</div>
+            </div>
+            <div class="p-row">
+              <div class="p-pos">3</div>
+              <div class="p-team">Villa del Río FC</div>
+              <div class="p-pts">31</div>
+              <div class="p-mv eq">—</div>
+            </div>
+            <div class="p-row">
+              <div class="p-pos">4</div>
+              <div class="p-team">Los Paisas SC</div>
+              <div class="p-pts">28</div>
+              <div class="p-mv dn">▼1</div>
+            </div>
+            <div class="p-row">
+              <div class="p-pos">5</div>
+              <div class="p-team">Bello Horizonte</div>
+              <div class="p-pts">24</div>
+              <div class="p-mv dn">▼2</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ MARQUEE ══════════ -->
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <div class="marquee-item"><span class="gem">◆</span><b>150K+</b> deportistas en Pereira</div>
+    <div class="marquee-item"><span class="gem">◆</span>Fútbol &amp; Pádel</div>
+    <div class="marquee-item"><span class="gem">◆</span>Liga permanente <b>todo el año</b></div>
+    <div class="marquee-item"><span class="gem">◆</span>Ranking en tiempo real</div>
+    <div class="marquee-item"><span class="gem">◆</span><b>Zero fricción</b></div>
+    <div class="marquee-item"><span class="gem">◆</span>Agente IA en WhatsApp</div>
+    <div class="marquee-item"><span class="gem">◆</span>Reserva de canchas <b>al instante</b></div>
+    <div class="marquee-item"><span class="gem">◆</span>Pagos por PSE con Wompi</div>
+    <!-- duplicate for seamless loop -->
+    <div class="marquee-item"><span class="gem">◆</span><b>150K+</b> deportistas en Pereira</div>
+    <div class="marquee-item"><span class="gem">◆</span>Fútbol &amp; Pádel</div>
+    <div class="marquee-item"><span class="gem">◆</span>Liga permanente <b>todo el año</b></div>
+    <div class="marquee-item"><span class="gem">◆</span>Ranking en tiempo real</div>
+    <div class="marquee-item"><span class="gem">◆</span><b>Zero fricción</b></div>
+    <div class="marquee-item"><span class="gem">◆</span>Agente IA en WhatsApp</div>
+    <div class="marquee-item"><span class="gem">◆</span>Reserva de canchas <b>al instante</b></div>
+    <div class="marquee-item"><span class="gem">◆</span>Pagos por PSE con Wompi</div>
+  </div>
+</div>
+
+<!-- ══════════ MISSION ══════════ -->
+<section id="mission">
+  <div class="mission-grid">
+    <div class="mission-quote rv">
+      "En Find Your Rival creemos que el deporte es el único espacio donde la
+      <em>clase social se vuelve invisible.</em>"
+    </div>
+    <div class="mission-right rv d2">
+      <p>
+        En la cancha, lo único que importa es cómo juegas. No importa de dónde vienes,
+        cuánto ganas ni a qué universidad fuiste. Si sabes jugar, aquí tienes un lugar.
+      </p>
+      <p>
+        Somos una plataforma deportiva nacida en Colombia, construida para los millones de
+        deportistas amateurs que merecen competir de verdad — con rivales reales, canchas reales
+        y una liga que los representa.
+      </p>
+      <div class="mission-manifesto">
+        "El deporte no pregunta de dónde vienes.<br>Nosotros tampoco."
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ PROBLEM ══════════ -->
+<section id="problem">
+  <div style="max-width:1200px;margin:0 auto;">
+    <div class="sh rv">
+      <div class="sec-tag">El problema</div>
+      <h2>Quieres jugar.<br>El sistema<br><span class="green">no te deja.</span></h2>
+      <p>Cada día, miles de personas quieren competir pero se enfrentan a barreras que no deberían existir.</p>
+    </div>
+    <div class="prob-grid">
+      <div class="prob-card rv d1"><div class="prob-num">01</div><span class="prob-icon">📱</span><h3>WhatsApps infinitos</h3><p>Grupos que no responden, capitanes que desaparecen. Organizas más de lo que juegas.</p></div>
+      <div class="prob-card rv d2"><div class="prob-num">02</div><span class="prob-icon">🎲</span><h3>Sin rival disponible</h3><p>Siempre los mismos o pura suerte. No existe forma confiable de encontrar equipos de tu nivel.</p></div>
+      <div class="prob-card rv d3"><div class="prob-num">03</div><span class="prob-icon">🏟️</span><h3>Reservas caóticas</h3><p>Llamadas eternas, canchas ocupadas, precios opacos. Solo para reservar pierdes más tiempo que el partido.</p></div>
+      <div class="prob-card rv d1"><div class="prob-num">04</div><span class="prob-icon">❌</span><h3>Equipos que cancelan</h3><p>Llegaste a la cancha y el rival no apareció. Sin sistema, sin compromiso. Puro caos.</p></div>
+      <div class="prob-card rv d2"><div class="prob-num">05</div><span class="prob-icon">🚧</span><h3>La brecha separa</h3><p>Sin plataforma abierta, solo juegas con quien ya conoces. El deporte que une, termina separando.</p></div>
+      <div class="prob-card rv d3"><div class="prob-num">06</div><span class="prob-icon">🏆</span><h3>Cero competencia real</h3><p>Sin ranking, sin liga, sin historial. Cada partido es un evento aislado sin propósito ni progreso.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ SOLUTION ══════════ -->
+<section id="solution">
+  <div style="max-width:1200px;margin:0 auto;">
+    <div class="sh rv">
+      <div class="sec-tag">La solución</div>
+      <h2>Todo lo que<br>necesitas para<br><span class="green">jugar en serio.</span></h2>
+      <p>Una plataforma que conecta deportistas para reservar canchas, encontrar rivales, contratar árbitros y competir en una liga — sin importar de dónde vienen.</p>
+    </div>
+    <div class="feat-grid">
+      <div class="feat-card rv d1">
+        <div class="fi">📍</div>
+        <h3>Reserva de Canchas</h3>
+        <p>Encuentra y reserva canchas deportivas al instante. Sin llamadas, sin esperas, sin WhatsApps.</p>
+        <div class="feat-more">Reservar ahora →</div>
+      </div>
+      <div class="feat-card rv d2">
+        <div class="fi">⚔️</div>
+        <h3>Matchmaking Automático</h3>
+        <p>El agente IA encuentra tu rival ideal según nivel, ciudad y deporte. Competencia justa, siempre.</p>
+        <div class="feat-more">Encontrar rival →</div>
+      </div>
+      <div class="feat-card rv d3">
+        <div class="fi">🦺</div>
+        <h3>Árbitros Certificados</h3>
+        <p>Profesionales verificados disponibles para tu partido. Fair play y seriedad garantizados.</p>
+        <div class="feat-more">Contratar árbitro →</div>
+      </div>
+      <div class="feat-card rv d4">
+        <div class="fi">🏆</div>
+        <h3>Liga Permanente</h3>
+        <p>Compite toda la temporada en una liga real con ranking en tiempo real. Cada partido cuenta.</p>
+        <div class="feat-more">Ver la liga →</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ LEAGUE ══════════ -->
+<section id="league">
+  <div class="league-glow"></div>
+  <div class="league-inner">
+
+    <div class="league-header rv">
+      <div class="league-coming">
+        <span class="live"></span>
+        Próximamente &nbsp;·&nbsp; Temporada 2026
+      </div>
+      <h2>La Liga<br><span class="green">Find Your Rival</span><br>Pereira.</h2>
+      <p>La primera liga amateur permanente de Pereira. Cualquier equipo puede retar a otro. El ranking habla por ti.</p>
+    </div>
+
+    <div class="league-content">
+      <!-- Leaderboard -->
+      <div class="lb rv">
+        <div class="lb-top">
+          <div class="lb-title"><span class="lb-title-icon">🏆</span>Liga FYR Pereira</div>
+          <div class="lb-season">Temporada 1 · 2026</div>
+        </div>
+        <div class="lb-cols">
+          <span style="text-align:center">#</span>
+          <span>Equipo</span>
+          <span>PJ</span><span>PG</span><span>PP</span><span>Pts</span>
+        </div>
+        <div class="lb-row r1" id="lbr1">
+          <span class="lb-pos p1">1</span>
+          <div class="lb-team"><div class="lb-av a1">LC</div><span class="lb-name">Los Cóndores FC</span></div>
+          <span class="lb-n">14</span><span class="lb-n">12</span><span class="lb-n">2</span>
+          <span class="lb-pts top">38</span>
+        </div>
+        <div class="lb-row" id="lbr2">
+          <span class="lb-pos p2">2</span>
+          <div class="lb-team"><div class="lb-av a2">GR</div><span class="lb-name">Guerreros RC</span></div>
+          <span class="lb-n">14</span><span class="lb-n">11</span><span class="lb-n">3</span>
+          <span class="lb-pts">35</span>
+        </div>
+        <div class="lb-row" id="lbr3">
+          <span class="lb-pos p3">3</span>
+          <div class="lb-team"><div class="lb-av a3">VR</div><span class="lb-name">Villa del Río FC</span></div>
+          <span class="lb-n">13</span><span class="lb-n">10</span><span class="lb-n">3</span>
+          <span class="lb-pts">31</span>
+        </div>
+        <div class="lb-row" id="lbr4">
+          <span class="lb-pos">4</span>
+          <div class="lb-team"><div class="lb-av a4">LP</div><span class="lb-name">Los Paisas SC</span></div>
+          <span class="lb-n">13</span><span class="lb-n">9</span><span class="lb-n">4</span>
+          <span class="lb-pts">28</span>
+        </div>
+        <div class="lb-row" id="lbr5">
+          <span class="lb-pos">5</span>
+          <div class="lb-team"><div class="lb-av a5">BH</div><span class="lb-name">Bello Horizonte</span></div>
+          <span class="lb-n">13</span><span class="lb-n">8</span><span class="lb-n">5</span>
+          <span class="lb-pts">24</span>
+        </div>
+        <div class="lb-row" id="lbr6">
+          <span class="lb-pos">6</span>
+          <div class="lb-team"><div class="lb-av a6">CF</div><span class="lb-name">Café FC</span></div>
+          <span class="lb-n">12</span><span class="lb-n">7</span><span class="lb-n">5</span>
+          <span class="lb-pts">22</span>
+        </div>
+      </div>
+
+      <!-- Right column -->
+      <div class="league-right">
+        <div class="ch-card rv d1">
+          <div class="ch-head">
+            <span class="ch-badge ch-reto">⚡ Reto activo</span>
+            <span class="ch-time">hace 3 min</span>
+          </div>
+          <div class="ch-teams">
+            <div class="ch-team"><div class="lb-av a1" style="width:30px;height:30px;">LC</div>Los Cóndores</div>
+            <div class="ch-vs">VS</div>
+            <div class="ch-team r"><div class="lb-av a2" style="width:30px;height:30px;">GR</div>Guerreros RC</div>
+          </div>
+          <div class="ch-meta">
+            <span>📍 Cancha Hernán Ramírez</span>
+            <span>📅 Sáb 4pm</span>
+            <span>⚽ Fútbol 7</span>
+          </div>
+        </div>
+
+        <div class="ch-card rv d2">
+          <div class="ch-head">
+            <span class="ch-badge ch-played">✓ Resultado</span>
+            <span class="ch-time">ayer</span>
+          </div>
+          <div class="ch-teams">
+            <div class="ch-team"><div class="lb-av a3" style="width:30px;height:30px;">VR</div>Villa del Río</div>
+            <div class="ch-vs">3 – 1</div>
+            <div class="ch-team r"><div class="lb-av a4" style="width:30px;height:30px;">LP</div>Los Paisas</div>
+          </div>
+          <div class="ch-meta">
+            <span>📍 Canchas del Café</span>
+            <span>🏆 +3 pts Villa del Río</span>
+          </div>
+        </div>
+
+        <div class="lg-features rv d3">
+          <div class="lgf">
+            <span class="lgf-icon">⚔️</span>
+            <div><h4>Sistema de retos</h4><p>Cualquier equipo reta a otro en su ciudad cuando quiera.</p></div>
+          </div>
+          <div class="lgf">
+            <span class="lgf-icon">📊</span>
+            <div><h4>Ranking en vivo</h4><p>Posiciones actualizadas con cada resultado registrado.</p></div>
+          </div>
+          <div class="lgf">
+            <span class="lgf-icon">🎖️</span>
+            <div><h4>Premio sorpresa</h4><p>El campeón de la temporada se lleva algo que vale la pena.</p></div>
+          </div>
+          <div class="lgf">
+            <span class="lgf-icon">🗓️</span>
+            <div><h4>Liga todo el año</h4><p>Permanente, sin pausas. Cada semana hay acción.</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ WHATSAPP AI ══════════ -->
+<section id="wa-ai">
+  <div class="wa-grid">
+    <div class="wa-copy rv">
+      <div class="sec-tag">Agente IA · Próximamente</div>
+      <h2>El capitán<br>escribe.<br><span class="green">La IA hace<br>el resto.</span></h2>
+      <p>Muy pronto tendrás un agente de inteligencia artificial en nuestro WhatsApp Business. Sin apps, sin registros, sin fricción. Solo escribes y el agente organiza todo.</p>
+      <div class="wa-steps">
+        <div class="wa-step"><div class="wa-step-n">1</div><div><h4>El capitán escribe al agente</h4><p>Un solo mensaje por WhatsApp. Eso es todo lo que necesitas.</p></div></div>
+        <div class="wa-step"><div class="wa-step-n">2</div><div><h4>La IA encuentra el rival</h4><p>Notifica automáticamente a capitanes disponibles de tu nivel.</p></div></div>
+        <div class="wa-step"><div class="wa-step-n">3</div><div><h4>Gestiona pago y cancha</h4><p>Cobra a ambos equipos por PSE vía Wompi y reserva la cancha.</p></div></div>
+        <div class="wa-step"><div class="wa-step-n">4</div><div><h4>A jugar. Eso es todo.</h4><p>Sin apps, sin registros. El deporte, como debería ser.</p></div></div>
+      </div>
+    </div>
+
+    <div class="chat-mock rv d2">
+      <div class="chat-bar">
+        <div class="chat-av">FYR</div>
+        <div>
+          <div class="chat-nm">Find Your Rival Agent</div>
+          <div class="chat-st">● En línea · Agente IA activo</div>
+        </div>
+      </div>
+      <div class="chat-body">
+        <div>
+          <div class="bbl bbl-out">Hola somos Los Cóndores FC, queremos jugar este sábado en Pereira ⚽🦅</div>
+          <div class="bbl-meta r">10:23 · ✓✓</div>
+        </div>
+        <div>
+          <div class="bbl bbl-in">¡Hola capitán! 🏆 Busco rival para <strong>Los Cóndores FC</strong> en Pereira, sábado. ¿Fútbol 7 o fútbol 11?</div>
+          <div class="bbl-meta">10:23</div>
+        </div>
+        <div>
+          <div class="bbl bbl-out">Fútbol 7, por la tarde</div>
+          <div class="bbl-meta r">10:24 · ✓✓</div>
+        </div>
+        <div class="typing"><span></span><span></span><span></span></div>
+        <div>
+          <div class="bbl bbl-in">✅ <strong>¡Rival encontrado!</strong> Guerreros RC aceptaron.<br><br>📍 Hernán Ramírez Villegas<br>📅 Sáb 18 mayo · 4:00pm<br>💳 PSE: $45.000 por equipo → [link Wompi]</div>
+          <div class="bbl-meta">10:25</div>
+        </div>
+        <div>
+          <div class="bbl bbl-out">🔥 ¡Perfecto! Pagado. Los vemos allá 💪</div>
+          <div class="bbl-meta r">10:26 · ✓✓</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ SPORTS ══════════ -->
+<section id="sports">
+  <div style="max-width:1200px;margin:0 auto;">
+    <div class="sh rv">
+      <div class="sec-tag">Deportes</div>
+      <h2>Empezamos<br>con dos.<br><span class="green">Vamos por todo.</span></h2>
+    </div>
+    <div class="sports-grid">
+      <div class="sport-card rv d1">
+        <span class="sport-em">⚽</span>
+        <div class="sport-label">Deporte de lanzamiento</div>
+        <h3>Fútbol</h3>
+        <p>El deporte más popular de Colombia y LATAM. Millones de jugadores amateurs esperando una plataforma como esta. Empezamos aquí.</p>
+        <span class="sport-pill">✓ Disponible en Pereira</span>
+      </div>
+      <div class="sport-card rv d2">
+        <span class="sport-em">🎾</span>
+        <div class="sport-label">Deporte de lanzamiento</div>
+        <h3>Pádel</h3>
+        <p>El deporte de mayor crecimiento en toda la región. La comunidad pádel de Pereira merece su propia liga competitiva.</p>
+        <span class="sport-pill">✓ Disponible en Pereira</span>
+      </div>
+    </div>
+    <div class="sports-coming rv">
+      <div class="sc-lbl">Próximamente:</div>
+      <div class="sc-pills">
+        <div class="sc-pill">🎾 Tenis</div>
+        <div class="sc-pill">🏀 Baloncesto</div>
+        <div class="sc-pill">🏐 Voleibol</div>
+        <div class="sc-pill">🏸 Bádminton</div>
+        <div class="sc-pill">+ más deportes</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ REWARDS ══════════ -->
+<section id="rewards">
+  <div style="max-width:1200px;margin:0 auto;">
+    <div class="sh rv">
+      <div class="sec-tag">Recompensas</div>
+      <h2>Juega.<br>Gana.<br><span class="green">Recibe.</span></h2>
+      <p>Los equipos que compiten son recompensados. Las marcas que patrocinan ganan visibilidad real.</p>
+    </div>
+    <div class="rew-grid">
+      <div class="rew-card wide rv d1">
+        <div class="rew-glow"></div>
+        <span class="rew-em">🎖️</span>
+        <h3>Premio sorpresa al campeón</h3>
+        <p>El equipo que termine primero en la liga de su ciudad se lleva un premio especial de temporada. ¿Qué es? Eso tendrás que ganarlo para descubrirlo.</p>
+      </div>
+      <div class="rew-card rv d2">
+        <div class="rew-glow"></div>
+        <span class="rew-em">👕</span>
+        <h3>Uniformes personalizados</h3>
+        <p>El líder del ranking recibe uniformes oficiales con su nombre y escudo. El reconocimiento que merecen.</p>
+      </div>
+      <div class="rew-card rv d1">
+        <div class="rew-glow"></div>
+        <span class="rew-em">🏟️</span>
+        <h3>Cancha gratis</h3>
+        <p>Los equipos más activos desbloquean partidos sin costo en canchas aliadas. Más juegas, más ganas.</p>
+      </div>
+      <div class="rew-card wide rv d2">
+        <div class="rew-glow"></div>
+        <span class="rew-em">🤝</span>
+        <h3>Alianzas con marcas deportivas</h3>
+        <p>Las marcas deportivas más importantes de Colombia quieren llegar al deportista amateur de forma directa y auténtica. Tú eres el canal. Tú recibes los beneficios. Socios estratégicos que amplifican la experiencia de toda la comunidad.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ ROADMAP ══════════ -->
+<section id="roadmap" style="padding:9rem 6%;background:var(--dark);">
+  <div class="rm-inner rv">
+    <div class="sh">
+      <div class="sec-tag">Hoja de ruta</div>
+      <h2>Dónde estamos.<br><span class="green">A dónde vamos.</span></h2>
+    </div>
+    <div class="rm-track">
+      <div class="rm-item">
+        <div class="rm-dot active"></div>
+        <div class="rm-phase">Ahora · 2026</div>
+        <h3>Liga en Pereira por WhatsApp</h3>
+        <div class="rm-tags">
+          <span class="rm-tag">⚽ Liga fútbol Pereira</span>
+          <span class="rm-tag">🎾 Liga pádel Pereira</span>
+          <span class="rm-tag">📱 Organización vía WhatsApp</span>
+          <span class="rm-tag">💳 Pagos PSE · Wompi</span>
+        </div>
+      </div>
+      <div class="rm-item">
+        <div class="rm-dot"></div>
+        <div class="rm-phase">Próximamente · 2026</div>
+        <h3>Agente IA en WhatsApp Business</h3>
+        <div class="rm-tags">
+          <span class="rm-tag">🤖 Agente IA activo</span>
+          <span class="rm-tag">🔗 Integración Easy Cancha</span>
+          <span class="rm-tag">⚡ Matchmaking automático</span>
+        </div>
+      </div>
+      <div class="rm-item">
+        <div class="rm-dot"></div>
+        <div class="rm-phase">En 6 meses · H2 2026</div>
+        <h3>App nativa — lanzamiento oficial</h3>
+        <div class="rm-tags">
+          <span class="rm-tag">📱 App iOS &amp; Android</span>
+          <span class="rm-tag">🏆 Liga con ranking</span>
+          <span class="rm-tag">🦺 Reserva de árbitros</span>
+          <span class="rm-tag">🎖️ Torneos desde la app</span>
+        </div>
+      </div>
+      <div class="rm-item">
+        <div class="rm-dot"></div>
+        <div class="rm-phase">Futuro · 2027+</div>
+        <h3>Expansión LATAM</h3>
+        <div class="rm-tags">
+          <span class="rm-tag">🏙️ Bogotá</span>
+          <span class="rm-tag">🌎 LATAM</span>
+          <span class="rm-tag">🏀 +10 deportes</span>
+          <span class="rm-tag">🏪 Marketplace</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ FINAL CTA ══════════ -->
+<section id="cta">
+  <div class="cta-glow"></div>
+  <div class="cta-grid"></div>
+  <div class="cta-inner">
+    <div class="sec-tag rv" style="display:flex;justify-content:center;">¿Estás listo para competir?</div>
+    <h2 class="rv">
+      Menos chat.<br>Más <span class="green">partido.</span>
+    </h2>
+    <p class="sub rv d1">
+      Encuentra rivales reales y compite por subir a lo más alto de la tabla.
+    </p>
+    <div class="wl-wrap rv d2">
+      <div class="wl-form">
+        <input type="email" id="wl-email" placeholder="tu@correo.com"/>
+        <button class="btn btn-lime" onclick="joinLeague()">Entrar a la liga →</button>
+      </div>
+      <p class="wl-note">📍 Lanzando en Pereira &nbsp;·&nbsp; Registro gratuito &nbsp;·&nbsp; Sin spam</p>
+    </div>
+    <div class="cta-btns rv d3">
+      <a href="https://wa.me/573000000000" class="btn btn-wa" target="_blank">💬 Hablar con nosotros</a>
+      <a href="mailto:findyourrival4@gmail.com" class="btn btn-ghost">✉️ findyourrival4@gmail.com</a>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ FOOTER ══════════ -->
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <div class="logo">
+        <span class="lw">FIND YOUR</span>
+        <span class="lg">RIVAL.</span>
+      </div>
+      <p class="footer-manifesto">
+        "El deporte no pregunta de dónde vienes. Nosotros tampoco."
+      </p>
+    </div>
+    <div class="footer-col">
+      <h4>Plataforma</h4>
+      <ul>
+        <li><a href="#solution">Cómo funciona</a></li>
+        <li><a href="#league">La Liga</a></li>
+        <li><a href="#wa-ai">Agente IA</a></li>
+        <li><a href="#roadmap">Roadmap</a></li>
+        <li><a href="#sports">Deportes</a></li>
+        <li><a href="#rewards">Recompensas</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Contacto</h4>
+      <a href="mailto:findyourrival4@gmail.com" class="footer-email">✉️ findyourrival4@gmail.com</a>
+      <div class="socials">
+        <a href="#" class="social" title="Instagram">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+        </a>
+        <a href="#" class="social" title="TikTok">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>
+        </a>
+        <a href="#" class="social" title="X">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 Find Your Rival · Pereira, Colombia · Todos los derechos reservados</p>
+    <p>Construido con ❤️ para los deportistas de LATAM</p>
+  </div>
+</footer>
+
+<!-- WA FAB -->
+<a href="https://wa.me/573000000000" class="wa-fab" target="_blank" title="Hablar por WhatsApp">💬</a>
+
+<script>
+/* ── Nav scroll ── */
+window.addEventListener('scroll',()=>{
+  document.getElementById('nav').classList.toggle('scrolled',scrollY>50);
+});
+
+/* ── Reveal on scroll ── */
+const io = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){e.target.classList.add('on');io.unobserve(e.target);}
+  });
+},{threshold:.1});
+document.querySelectorAll('.rv').forEach(el=>io.observe(el));
+
+/* ── Smooth anchors ── */
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+  a.addEventListener('click',e=>{
+    const t=document.querySelector(a.getAttribute('href'));
+    if(t){e.preventDefault();t.scrollIntoView({behavior:'smooth'});}
+  });
+});
+
+/* ── Animated leaderboard flicker ── */
+const lbRows=['lbr1','lbr2','lbr3','lbr4','lbr5','lbr6'];
+setInterval(()=>{
+  const id=lbRows[Math.floor(Math.random()*lbRows.length)];
+  const el=document.getElementById(id);
+  if(el){el.classList.add('flash');setTimeout(()=>el.classList.remove('flash'),700);}
+},2800);
+
+/* ── Waitlist ── */
+function joinLeague(){
+  const inp=document.getElementById('wl-email');
+  const btn=inp.nextElementSibling;
+  if(!inp.value.trim()||!inp.value.includes('@')){
+    inp.style.borderColor='#ff4444';inp.focus();return;
+  }
+  btn.textContent='✓ ¡Anotado!';
+  btn.style.background='#1a6b38';btn.style.color='#fff';
+  inp.style.borderColor='#76B900';
+  inp.disabled=true;inp.value='';
+  inp.placeholder='Te avisamos cuando arranquemos 🏆';
+}
+</script>
+</body>
+</html>
